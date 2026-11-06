@@ -1,9 +1,9 @@
-# Apple T2 Touch Bar (OLED Dynamic) & Touch ID Bridge for Ubuntu 24.04 LTS
+# Apple T2 Touch Bar (OLED Dinámica Zero-Reboot) & Touch ID Bridge para Ubuntu 24.04 LTS
 
 [![Ubuntu 24.04 LTS](https://img.shields.io/badge/Ubuntu-24.04_LTS_(Noble)-E95420?logo=ubuntu&logoColor=white)](#)
 [![Linux Kernel T2](https://img.shields.io/badge/Kernel-linux--t2_(v7.x)-00B4D8?logo=linux&logoColor=white)](#)
-[![Hardware](https://img.shields.io/badge/Apple_T2-BridgeOS_RemoteXPC-111827?logo=apple&logoColor=white)](#)
-[![Touch Bar & Touch ID](https://img.shields.io/badge/Biometrics-Touch_ID_%2B_Touch_Bar-10B981?logo=apple&logoColor=white)](#)
+[![Zero Reboot](https://img.shields.io/badge/Touch_Bar-Zero--Reboot_Live_Activation-10B981?logo=apple&logoColor=white)](#)
+[![Touch ID Biometrics](https://img.shields.io/badge/Biometrics-Touch_ID_%2B_PAM_sudo-10B981?logo=apple&logoColor=white)](#)
 [![Author](https://img.shields.io/badge/Author-Juan_Monz%C3%B3n_(@mylnzon58)-10B981?logo=github&logoColor=white)](https://github.com/mylnzon58)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Juan_Monz%C3%B3n-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/juan-m-97b85681/)
 [![Instagram](https://img.shields.io/badge/Instagram-%40juanjoclassic-E4405F?logo=instagram&logoColor=white)](https://www.instagram.com/juanjoclassic/)
@@ -11,9 +11,9 @@
 [![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
 
 > **Author & Maintainer:** **[Juan Monzón (@mylnzon58)](https://www.linkedin.com/in/juan-m-97b85681/)** — *AI Product | Full Stack Developer | Digital Products & Growth* (Argentina)  
-> **Upstream Research & Core Protocols:** **[André Eikmeyer / KAIT2EN Project](https://github.com/kaiT2en)**  
-> ☕ **¿Te sirvió esta solución?** Si esta implementación te permitió activar la Touch Bar OLED gráfica dinámica y habilitar Touch ID para `sudo` y login en Ubuntu 24.04 LTS, puedes apoyar este desarrollo invitándome un Tecito en **[tecito.app/juanjoclassic](https://tecito.app/juanjoclassic)**, dejando una **Star ⭐** en el repo y conectando en **[LinkedIn](https://www.linkedin.com/in/juan-m-97b85681/)**.  
-> ☕ **Did this save your day?** If this bridge helped you unlock dynamic OLED Touch Bar graphics and enable Touch ID biometric authentication for `sudo` and login on Ubuntu 24.04 LTS, feel free to support my work by buying me a Tecito at **[tecito.app/juanjoclassic](https://tecito.app/juanjoclassic)**, **Starring ⭐** this repository, and connecting on **[LinkedIn](https://www.linkedin.com/in/juan-m-97b85681/)**.
+> **Upstream Research & Core Protocols:** **[André Eikmeyer / KAIT2EN Project](https://github.com/kaiT2en)** & **[Aditya Garg](https://github.com/AdityaGarg8)**  
+> ☕ **¿Te sirvió esta solución?** Si esta implementación te permitió activar la Touch Bar OLED interactiva sin reiniciar y habilitar Touch ID para `sudo` en Ubuntu 24.04 LTS, puedes apoyar este desarrollo invitándome un Tecito en **[tecito.app/juanjoclassic](https://tecito.app/juanjoclassic)**, dejando una **Star ⭐** en el repo y conectando en **[LinkedIn](https://www.linkedin.com/in/juan-m-97b85681/)**.  
+> ☕ **Did this save your day?** If this bridge helped you unlock dynamic OLED Touch Bar graphics with zero reboots and enable Touch ID biometric authentication for `sudo` on Ubuntu 24.04 LTS, feel free to support my work by buying me a Tecito at **[tecito.app/juanjoclassic](https://tecito.app/juanjoclassic)**, **Starring ⭐** this repository, and connecting on **[LinkedIn](https://www.linkedin.com/in/juan-m-97b85681/)**.
 
 <p align="left">
   <a href="https://tecito.app/juanjoclassic" target="_blank">
@@ -27,49 +27,69 @@
   </a>
 </p>
 
-**[Español](#-español--arquitectura-completa-de-touch-bar-oled-y-touch-id-para-ubuntu-2404-lts)** | **[English](#-english--complete-apple-t2-touch-bar-oled--touch-id-bridge-for-ubuntu-2404-lts)**
+**[Español](#-español--arquitectura-recursos-instalados-y-activación-zero-reboot)** | **[English](#-english--architecture-installed-resources--zero-reboot-activation)**
 
 ---
 
-## 🇪🇸 Español — Arquitectura Completa de Touch Bar OLED y Touch ID para Ubuntu 24.04 LTS
+## 🇪🇸 Español — Arquitectura, Recursos Instalados y Activación Zero-Reboot
 
-### 1. ¿Por qué la Touch Bar muestra sólo teclas estáticas por defecto?
-En Linux, la pantalla de la Touch Bar (`05ac:8302`) inicia por hardware en **USB Configuration 1** (Modo Fallback HID). En este modo, el firmware de la Touch Bar solo proyecta iconos estáticos fijos de Esc y F1-F12 sin capacidad gráfica.
+### 1. El Avance: Activación de Touch Bar OLED Dinámica "Zero-Reboot" (Sin Reiniciar)
+Hasta ahora, la documentación de la comunidad indicaba que para pasar del modo básico estático de la Touch Bar (Esc y F1-F12) al modo gráfico dinámico era obligatorio reiniciar el equipo. Si se cambiaba en caliente, el kernel arrojaba `appletbdrm failed with error -110 (ETIMEDOUT)` y la pantalla se apagaba.
 
-Para transformarla en una pantalla **OLED gráfica dinámica** (con reloj, batería, controles multimedia táctiles, brillo de pantalla/teclado y lanzador de aplicaciones):
-1. El dispositivo USB debe conmutarse a **USB Configuration 2** (`echo 2 > /sys/bus/usb/devices/.../bConfigurationValue`).
-2. Se carga el módulo del kernel `appletbdrm` que expone el framebuffer DRM en `/dev/dri/card*`.
-3. El daemon `tiny-dfr-adv` se enlaza a la pantalla y renderiza la interfaz vectorial con SVG nativos y soporte táctil multitouch.
-
-### 2. ¿Cómo funciona Touch ID en Linux con el chip Apple T2?
-El sensor biométrico Touch ID está conectado directamente al coprocesador Apple T2 y gobernado por el **Secure Enclave Processor (SEP)**. El SEP **no permite enrolar nuevas huellas desde Linux** por motivos de aislamiento criptográfico (keybag y catacomb).
-
-**La solución arquitectónica:**
-* Las huellas dactilares se registran previamente bajo **macOS** (en Ajustes del Sistema).
-* Este puente (`t2-touchid`) se comunica con el servicio `BiometricKit` de BridgeOS sobre el enlace de red IPv6 `CDC-NCM` interno (puerto `59602`).
-* Conecta el veredicto del SEP a un dispositivo virtual en `/run/t2-touchid/fprint.sock`, integrándose de forma 100% nativa con `fprintd` y `pam_fprintd.so` de Ubuntu 24.04.
-* **Resultado:** Cuando ejecutas `sudo` o inicias sesión, el sensor se activa en 0.2 segundos. Al posar el dedo registrado en macOS, ¡te autenticas al instante sin escribir contraseñas! Y si presionas `Esc`, cancela y te pide la contraseña inmediatamente.
+**Descubrimos la secuencia exacta para activarla en vivo en una sesión activa sin reiniciar:**
+1. Desconfigurar el endpoint USB escribiendo `0` en `bConfigurationValue` para vaciar los buffers del controlador virtual `bce-vhci`.
+2. Establecer `bConfigurationValue = 2` (modo DRM Framebuffer OLED).
+3. Recargar el módulo del kernel: `modprobe -r appletbdrm && modprobe appletbdrm`.
+4. El kernel sincroniza limpiamente con el hardware:
+   ```text
+   [drm] Initialized appletbdrm 1.0.0 for 7-6:2.1 on minor 0
+   ```
+5. El daemon `tiny-dfr` toma el control de `/dev/dri/card*` y enciende la interfaz táctil con widgets en tiempo real.
 
 ---
 
-### Verificación en Vivo de Comunicación con BridgeOS
+### 2. Recursos y Componentes Instalados en el Sistema
+
+El instalador automatizado gestiona e integra los siguientes recursos en Ubuntu 24.04 LTS:
+
+| Componente | Tipo / Ruta | Función en el Sistema |
+| :--- | :--- | :--- |
+| **`tiny-dfr-adv`** | Paquete APT (`0.3.1-1-noble`) | Daemon userspace que renderiza la interfaz visual interactiva en la pantalla OLED. |
+| **`config.toml`** | `/etc/tiny-dfr/config.toml` | Configuración con `SpecialExtendedMode=true`: reloj 24h, batería, lanzador de apps y controles táctiles. |
+| **`appletbdrm`** | Driver Kernel (`appletbdrm.ko`) | Expone la pantalla OLED de la Touch Bar como dispositivo DRM en `/dev/dri/card*`. |
+| **`t2-touchid`** | Binario Rust (`/usr/local/bin/t2-touchid`) | Daemon compilado nativamente que comunica Linux con el Secure Enclave (SEP) de Apple T2. |
+| **`t2-touchid.conf`** | `/etc/kait2en/t2-touchid.conf` | Configuración de usuario para vinculación biométrica automática (`zeeroj` / `auto`). |
+| **`t2-touchid.service`** | `/etc/systemd/system/t2-touchid.service` | Servicio systemd persistente que escucha peticiones de verificación de huella. |
+| **`fprintd-t2-touchid.conf`** | `/etc/systemd/system/fprintd.service.d/` | Drop-in que conecta `libfprint` al socket virtual `/run/t2-touchid/fprint.sock`. |
+| **`fprintd` / `libpam-fprintd`** | Paquetes oficiales Ubuntu | Módulo PAM (`pam_fprintd.so`) para autenticar `sudo` y login con huella dactilar. |
+| **`10-t2-services.conf`** | `/etc/NetworkManager/conf.d/` | Regla para aislar la interfaz interna USB CDC-NCM (`mac:ac:de:48:00:11:22`). |
+| **`90-t2-services-ncm.rules`** | `/etc/udev/rules.d/` | Asigna IPv6 EUI-64 link-local para dialogar con BridgeOS en `port 59602`. |
+| **`t2-touchbar.conf`** | `/etc/modprobe.d/` | Debouncing de teclado y sensibilidad de Touch Bar (`double_press_switch_time=250`). |
+
+---
+
+### 3. Touch ID: Funcionamiento y Verificación en Vivo
 
 ```text
-==========================================================================
- Apple T2 BridgeOS RemoteXPC Link Diagnostic (Ubuntu 24.04 LTS)
-==========================================================================
-[+] Found network interface 't2_ncm' (Scope ID: 2)
-[+] Connecting to Apple T2 BridgeOS at [fe80::aede:48ff:fe33:4455]:59602 via t2_ncm...
-[✓] TCP Connection established successfully!
-[+] Sent RemoteXPC HTTP/2 preface handshake...
-[✓] Received valid response from Apple T2 BridgeOS (21 bytes):
-    Raw bytes: 00000c040000000000000300000064000400100000
-[✓] Apple T2 RemoteXPC discovery & BiometricKit transport is ACTIVE and OPERATIONAL!
+$ fprintd-list $USER
+found 1 devices
+Device at /net/reactivated/Fprint/Device/0
+Using device /net/reactivated/Fprint/Device/0
+Fingerprints for user zeeroj on Virtual device with storage and identification:
+ - #0: right-index-finger
 ```
+
+Cuando ejecutas `sudo` en cualquier terminal:
+```text
+$ sudo apt update
+Deslice su dedo índice derecho por el lector de huellas dactilares
+```
+* **Apoyas tu dedo** sobre el sensor en la esquina superior derecha: autenticación en **0.2 segundos**.
+* **Presionas `Esc`**: cancela de inmediato y pide contraseña sin esperar tiempos de espera.
 
 ---
 
-### Instalación en 1 Paso
+### 4. Instalación Automatizada (1 Solo Paso)
 ```bash
 git clone https://github.com/mylnzon58/t2-touchid-touchbar-bridge-ubuntu-24.git
 cd t2-touchid-touchbar-bridge-ubuntu-24
@@ -79,28 +99,56 @@ sudo ./install.sh
 
 ---
 
-## 🇬🇧 English — Complete Apple T2 Touch Bar OLED & Touch ID Bridge for Ubuntu 24.04 LTS
+## 🇬🇧 English — Architecture, Installed Resources & Zero-Reboot Activation
 
-### 1. Why does the Touch Bar only show static keys by default?
-On standard Linux boots, the Touch Bar display controller (`05ac:8302`) starts in hardware **USB Configuration 1** (Fallback HID mode), presenting only static Esc and F1-F12 keys.
+### 1. The Breakthrough: Zero-Reboot OLED Dynamic Touch Bar Activation
+Previously, upstream documentation indicated that switching the Touch Bar from fallback HID keys (Esc & F1-F12) to dynamic OLED graphics required a mandatory cold reboot. Any live switch attempt resulted in `appletbdrm failed with error -110 (ETIMEDOUT)` and a blank screen.
 
-To activate the **dynamic OLED graphics** (displaying real-time clock, battery status, media buttons, and volume/brightness sliders):
-1. The USB interface is switched to **USB Configuration 2** (`bConfigurationValue = 2`).
-2. The kernel module `appletbdrm` exposes the Touch Bar display as a DRM framebuffer.
-3. The userspace daemon `tiny-dfr-adv` renders the rich vector UI and listens to input touch events.
-
-### 2. How Touch ID functions on Apple T2 under Ubuntu 24.04
-The biometric sensor is managed exclusively by Apple's Secure Enclave Processor (SEP) inside the T2 chip. For security reasons, Linux cannot enroll new biometric keybags from scratch.
-
-**How this bridge achieves native Touch ID authentication:**
-* Enroll your finger(s) once in **macOS** System Settings.
-* The `t2-touchid` daemon connects to BridgeOS RemoteXPC over the internal CDC-NCM IPv6 link on port `59602`.
-* It interfaces with stock Ubuntu `libfprint` and `fprintd` via the virtual socket interface `/run/t2-touchid/fprint.sock`.
-* **Result:** Whenever `sudo` or the login prompt requests authentication, simply tap the Touch ID sensor. The SEP verifies the match and grants authentication instantly. If you press `Esc`, it falls back directly to the password prompt.
+**We uncovered the exact hardware handshake to activate it live with ZERO reboots:**
+1. Unconfigure the USB endpoint by writing `0` to `bConfigurationValue` to purge `bce-vhci` buffers.
+2. Set `bConfigurationValue = 2` (OLED DRM Framebuffer mode).
+3. Safely reload the kernel module: `modprobe -r appletbdrm && modprobe appletbdrm`.
+4. The kernel synchronizes cleanly with the T2 hardware:
+   ```text
+   [drm] Initialized appletbdrm 1.0.0 for 7-6:2.1 on minor 0
+   ```
+5. The `tiny-dfr` daemon binds to `/dev/dri/card*` and projects real-time dynamic widgets instantly.
 
 ---
 
-### Quick 1-Step Installation
+### 2. Installed System Resources & Integration Mapping
+
+The automated installer manages and deploys the following resources on Ubuntu 24.04 LTS:
+
+| Resource | Path / Package | Function |
+| :--- | :--- | :--- |
+| **`tiny-dfr-adv`** | APT package (`0.3.1-1-noble`) | Userspace daemon rendering vector UI & widgets on the OLED Touch Bar. |
+| **`config.toml`** | `/etc/tiny-dfr/config.toml` | UI layout: 24h clock, battery meter, app shortcuts, and media/volume keys. |
+| **`appletbdrm`** | Kernel driver (`appletbdrm.ko`) | Exposes the OLED panel as a native DRM display device in `/dev/dri/card*`. |
+| **`t2-touchid`** | Rust binary (`/usr/local/bin/t2-touchid`) | Native daemon bridging Linux with the Apple T2 Secure Enclave Processor (SEP). |
+| **`t2-touchid.conf`** | `/etc/kait2en/t2-touchid.conf` | Configuration binding pre-enrolled macOS identities to the Linux account. |
+| **`t2-touchid.service`** | `/etc/systemd/system/t2-touchid.service` | Systemd service managing biometric authentication requests. |
+| **`fprintd-t2-touchid.conf`** | `/etc/systemd/system/fprintd.service.d/` | Drop-in routing `libfprint` to virtual socket `/run/t2-touchid/fprint.sock`. |
+| **`fprintd` / `libpam-fprintd`** | Ubuntu upstream packages | Standard PAM integration (`pam_fprintd.so`) for fingerprint-enabled `sudo` & login. |
+| **`10-t2-services.conf`** | `/etc/NetworkManager/conf.d/` | Isolates the internal CDC-NCM link (`mac:ac:de:48:00:11:22`) from NetworkManager. |
+| **`90-t2-services-ncm.rules`** | `/etc/udev/rules.d/` | Automatically configures IPv6 EUI-64 link-local for BridgeOS communication on port 59602. |
+| **`t2-touchbar.conf`** | `/etc/modprobe.d/` | Butterfly keyboard debouncing filter (`double_press_switch_time=250`). |
+
+---
+
+### 3. Native Touch ID Verification
+
+Whenever `sudo` or the login prompt requests credentials:
+```text
+$ sudo apt update
+Deslice su dedo índice derecho por el lector de huellas dactilares
+```
+- Rest your finger on the sapphire Touch ID sensor: **authenticated in 0.2 seconds**.
+- Press **`Esc`**: immediately aborts the scan and falls back to password entry without timeout.
+
+---
+
+### 4. 1-Step Installation
 ```bash
 git clone https://github.com/mylnzon58/t2-touchid-touchbar-bridge-ubuntu-24.git
 cd t2-touchid-touchbar-bridge-ubuntu-24
@@ -116,5 +164,5 @@ sudo ./uninstall.sh
 ---
 
 ### License & Attribution
-- Upstream Research, RemoteXPC protocols and BiometricKit reverse engineering by **André Eikmeyer** / **[KAIT2EN Project](https://github.com/kaiT2en)** (GPL-3.0-or-later).
-- Ubuntu 24.04 LTS adaptation, packaging, installer, and documentation by **Juan Monzón (@mylnzon58)** (GPL-3.0-or-later).
+- Upstream Research, RemoteXPC protocols, and BiometricKit reverse engineering by **André Eikmeyer** / **[KAIT2EN Project](https://github.com/kaiT2en)** (GPL-3.0-or-later).
+- Ubuntu 24.04 LTS Noble port, Zero-Reboot activation handshake, installer, and packaging by **Juan Monzón (@mylnzon58)** (GPL-3.0-or-later).

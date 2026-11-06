@@ -58,3 +58,4 @@ AppLayerKeys1 = [
     { Icon = "display-brightness-high-symbolic", Action = "BrightnessUp", Mode = "Media"},
     { Icon = "go-next-symbolic",              Action = "Macro3",     Mode = "Media"}
 ]
+
