@@ -48,24 +48,13 @@ if [ -f "$SCRIPT_DIR/config/tiny-dfr.toml" ]; then
   cp "$SCRIPT_DIR/config/tiny-dfr.toml" /etc/tiny-dfr/config.toml
 fi
 
-# Switch Touch Bar USB from Fallback (Config 1) to DRM Graphics (Config 2)
-for dev in /sys/bus/usb/devices/*; do
-  if [ -f "$dev/idVendor" ] && [ "$(cat "$dev/idVendor" 2>/dev/null)" = "05ac" ] && [ "$(cat "$dev/idProduct" 2>/dev/null)" = "8302" ]; then
-    echo "    Detectada pantalla OLED Touch Bar en $dev (Config actual: $(cat "$dev/bConfigurationValue"))"
-    echo 2 > "$dev/bConfigurationValue" || true
-    echo "    Activado modo DRM framebuffer OLED (Config: $(cat "$dev/bConfigurationValue"))"
-  fi
-done
-udevadm trigger || true
-
-if systemctl is-active --quiet tiny-dfr.service || [ -f /etc/systemd/system/tiny-dfr.service ]; then
-  systemctl restart tiny-dfr.service || true
-fi
+echo "    [i] Regla udev configurada para USB Configuration 2 (OLED DRM framebuffer al reiniciar)."
+echo "    [i] Para no apagar la Touch Bar en la sesión actual, se mantiene activa en Config 1 hasta el próximo reinicio."
 
 echo "[+] 6. Instalando daemon y drop-ins para Touch ID (fprintd / PAM)..."
+systemctl stop t2-touchid.service 2>/dev/null || true
 if [ -f "$SCRIPT_DIR/bin/t2-touchid" ]; then
-  cp "$SCRIPT_DIR/bin/t2-touchid" /usr/local/bin/t2-touchid
-  chmod 755 /usr/local/bin/t2-touchid
+  install -m 755 "$SCRIPT_DIR/bin/t2-touchid" /usr/local/bin/t2-touchid
 fi
 
 mkdir -p /etc/kait2en
