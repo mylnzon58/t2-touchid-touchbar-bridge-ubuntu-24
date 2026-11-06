@@ -10,3 +10,4 @@ ExecStart=/usr/local/sbin/t2-touchid-bridge-init.sh
 
 [Install]
 WantedBy=multi-user.target
+

@@ -1,0 +1,60 @@
+# Custom tiny-dfr configuration for Apple MacBook Pro 16,1 (A2141)
+# Ubuntu 24.04 LTS (Noble Numbat)
+# Enables OLED dynamic display, media controls, system shortcuts, and battery/clock
+
+MediaLayerDefault = true
+SpecialExtendedMode = true
+ShowButtonOutlines = true
+EnablePixelShift = false
+FontRenderer = "freetype"
+FontTemplate = ":bold"
+MediaIconTheme = "tiny-dfr-icons"
+AppIconTheme = "hicolor"
+AdaptiveBrightness = true
+ActiveBrightness = 180
+
+PrimaryLayerKeys = [
+    { Text = "F1",  Action = "F1"  },
+    { Text = "F2",  Action = "F2"  },
+    { Text = "F3",  Action = "F3"  },
+    { Text = "F4",  Action = "F4"  },
+    { Text = "F5",  Action = "F5"  },
+    { Text = "F6",  Action = "F6"  },
+    { Text = "F7",  Action = "F7"  },
+    { Text = "F8",  Action = "F8"  },
+    { Text = "F9",  Action = "F9"  },
+    { Text = "F10", Action = "F10" },
+    { Text = "F11", Action = "F11" },
+    { Text = "F12", Action = "F12" }
+]
+
+MediaLayerKeys = [
+    { Icon = "display-brightness-low-symbolic",   Action = "BrightnessDown", Mode = "Media"},
+    { Icon = "display-brightness-high-symbolic",  Action = "BrightnessUp",   Mode = "Media"},
+    { Icon = "microphone-disabled-symbolic",      Action = "MicMute",        Mode = "Media"},
+    { Icon = "system-search-symbolic",            Action = "Search",         Mode = "Media"},
+    { Icon = "keyboard-brightness-low-symbolic",  Action = "IllumDown",      Mode = "Media"},
+    { Icon = "keyboard-brightness-high-symbolic", Action = "IllumUp",        Mode = "Media"},
+    { Icon = "media-seek-backward-symbolic",      Action = "PreviousSong",   Mode = "Media"},
+    { Icon = "media-playback-start-symbolic",     Action = "PlayPause",      Mode = "Media"},
+    { Icon = "media-seek-forward-symbolic",       Action = "NextSong",       Mode = "Media"},
+    { Icon = "audio-volume-muted-symbolic",       Action = "Mute",           Mode = "Media"},
+    { Icon = "audio-volume-low-symbolic",         Action = "VolumeDown",     Mode = "Media"},
+    { Icon = "audio-volume-high-symbolic",        Action = "VolumeUp",       Mode = "Media"}
+]
+
+AppLayerKeys1 = [
+    { Icon = "web-browser-symbolic",          Action = "WWW",        Mode = "Media"},
+    { Icon = "system-file-manager-symbolic",  Action = "File",       Mode = "Media"},
+    { Icon = "accessories-calculator-symbolic", Action = "Calc",     Mode = "Media"},
+    { Icon = "system-search-symbolic",        Action = "Search",     Mode = "Media"},
+    { Icon = "go-next-symbolic",              Action = "Macro2",     Mode = "Media"},
+    { Action = "Time",                        Mode = "Time",         Format = "24hr", Locale = "en_US"},
+    { Action = "Unknown", Mode = "Blank"},
+    { Action = "Unknown", Mode = "Blank"},
+    { Icon = "audio-volume-low-symbolic",     Action = "VolumeDown", Mode = "Media"},
+    { Icon = "audio-volume-high-symbolic",    Action = "VolumeUp",   Mode = "Media"},
+    { Icon = "media-playback-start-symbolic", Action = "PlayPause",  Mode = "Media"},
+    { Icon = "display-brightness-high-symbolic", Action = "BrightnessUp", Mode = "Media"},
+    { Icon = "go-next-symbolic",              Action = "Macro3",     Mode = "Media"}
+]

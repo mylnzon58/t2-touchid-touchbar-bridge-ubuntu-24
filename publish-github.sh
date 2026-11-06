@@ -61,3 +61,4 @@ gh api -X PUT "repos/${GH_USER}/${REPO_NAME}/pages" \
 
 echo -e "\n${GREEN}[✓] Public Repo:${NC} https://github.com/${GH_USER}/${REPO_NAME}"
 echo -e "${GREEN}[✓] Live Page:${NC} https://${GH_USER}.github.io/${REPO_NAME}/"
+

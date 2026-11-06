@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>T2-BRIDGE(8) — Apple T2 Touch Bar & Touch ID CDC-NCM Bridge for Ubuntu 24.04 LTS</title>
-  <meta name="description" content="Apple T2 BridgeOS RemoteXPC transport, Touch Bar debouncing, and Touch ID biometric bridge architecture ported from KAIT2EN to Ubuntu 24.04 LTS. By Juan Monzón (@mylnzon58)." />
-  <meta name="keywords" content="Apple T2 Touch ID Linux, Apple T2 Touch Bar Ubuntu 24.04, MacBook Pro A2141 Touch ID, t2_ncm bridgeOS RemoteXPC port 59602, KAIT2EN Ubuntu port, Juan Monzon, mylnzon58" />
+  <title>T2-BRIDGE(8) — Apple T2 Touch Bar (OLED Dynamic) & Touch ID Bridge for Ubuntu 24.04 LTS</title>
+  <meta name="description" content="Apple T2 BridgeOS RemoteXPC transport, Dynamic OLED Touch Bar, and Touch ID biometric bridge architecture ported from KAIT2EN to Ubuntu 24.04 LTS. By Juan Monzón (@mylnzon58)." />
+  <meta name="keywords" content="Apple T2 Touch ID Linux, Apple T2 Touch Bar Ubuntu 24.04, MacBook Pro A2141 Touch ID, t2_ncm bridgeOS RemoteXPC port 59602, KAIT2EN Ubuntu port, Juan Monzon, mylnzon58, tiny-dfr OLED" />
   <meta name="author" content="Juan Monzón (mylnzon58@gmail.com)" />
   <meta name="robots" content="index, follow" />
 
   <!-- OpenGraph -->
-  <meta property="og:title" content="Apple T2 Touch Bar & Touch ID Bridge for Ubuntu 24.04 LTS" />
-  <meta property="og:description" content="Unlock Apple T2 BridgeOS RemoteXPC communication and Touch Bar debouncing on Ubuntu 24.04 LTS." />
+  <meta property="og:title" content="Apple T2 Touch Bar (OLED Dynamic) & Touch ID Bridge for Ubuntu 24.04 LTS" />
+  <meta property="og:description" content="Unlock Apple T2 Dynamic OLED Touch Bar and native Touch ID biometric authentication for sudo and login on Ubuntu 24.04 LTS." />
   <meta property="og:url" content="https://mylnzon58.github.io/t2-touchid-touchbar-bridge-ubuntu-24/" />
   <meta property="og:type" content="website" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet" />
 
   <style>
@@ -157,63 +157,57 @@
       <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
     </div>
     <div data-lang="es">
-      <h1>Apple T2 Touch Bar & Touch ID Bridge para Ubuntu 24.04 LTS</h1>
-      <p class="lead">Arquitectura de enlace interno CDC-NCM, transporte RemoteXPC en puerto 59602 y debouncing de Touch Bar adaptados de KAIT2EN para Ubuntu y Debian.</p>
+      <h1>Apple T2 Touch Bar (OLED Dinámica) & Touch ID Bridge para Ubuntu 24.04 LTS</h1>
+      <p class="lead">Activación de pantalla OLED dinámica, widgets multimedia/batería, y autenticación biométrica Touch ID con Secure Enclave en Ubuntu 24.04 LTS.</p>
     </div>
     <div data-lang="en" style="display:none;">
-      <h1>Apple T2 Touch Bar & Touch ID Bridge for Ubuntu 24.04 LTS</h1>
-      <p class="lead">Internal CDC-NCM transport, RemoteXPC port 59602 handshake, and Touch Bar debouncing architecture ported from KAIT2EN to Ubuntu and Debian systems.</p>
+      <h1>Apple T2 Touch Bar (Dynamic OLED) & Touch ID Bridge for Ubuntu 24.04 LTS</h1>
+      <p class="lead">Dynamic OLED Touch Bar graphics activation, battery/clock widgets, and Touch ID biometric authentication wired to the T2 Secure Enclave in Ubuntu 24.04 LTS.</p>
     </div>
     <div class="badge-row">
       <span class="badge badge-orange">Ubuntu 24.04 LTS</span>
-      <span class="badge badge-cyan">RemoteXPC :59602</span>
-      <span class="badge badge-green">Touch Bar + Touch ID Bridge</span>
+      <span class="badge badge-cyan">Dynamic OLED Touch Bar</span>
+      <span class="badge badge-green">Touch ID + PAM Biometrics</span>
     </div>
   </header>
 
   <div class="container">
     <div class="card">
       <div data-lang="es">
-        <h2>⚡ Arquitectura de Comunicación con el Coprocesador Apple T2</h2>
-        <p>En lugar de depender de parches cerrados para una sola distro, este puente conecta el espacio de usuario de Ubuntu directamente con BridgeOS a través del bus de red virtual USB:</p>
+        <h2>⚡ Arquitectura de Integración Apple T2</h2>
+        <p>Solución nativa para usuarios de Ubuntu 24.04 LTS (Noble Numbat) sin depender de scripts propietarios de Fedora:</p>
       </div>
       <div data-lang="en" style="display:none;">
-        <h2>⚡ Apple T2 Coprocessor Communication Architecture</h2>
-        <p>Instead of relying on single-distro proprietary recipes, this bridge wires Ubuntu userspace directly to BridgeOS over the virtual USB CDC-NCM bus:</p>
+        <h2>⚡ Apple T2 Integration Architecture</h2>
+        <p>Native solution for Ubuntu 24.04 LTS (Noble Numbat) users without relying on Fedora-only scripts:</p>
       </div>
 
       <div class="arch-grid">
         <div class="arch-box">
-          <h3>1. Enlace T2 CDC-NCM</h3>
-          <p>Dispositivo USB <code>05ac:8233</code> aislado de NetworkManager para evitar desconexiones en suspensión.</p>
+          <h3>1. Touch Bar Dinámica OLED</h3>
+          <p>Conmutación USB de Config 1 (Fallback estático) a Config 2 (DRM Framebuffer), habilitando <code>tiny-dfr</code> con reloj, batería y teclas multimedia.</p>
         </div>
         <div class="arch-box">
-          <h3>2. RemoteXPC Port 59602</h3>
-          <p>Handshake HTTP/2 link-local activo con el Secure Enclave (SEP) en <code>fe80::aede:48ff:fe33:4455</code>.</p>
+          <h3>2. Touch ID con Secure Enclave</h3>
+          <p>Puente <code>t2-touchid</code> sobre red interna CDC-NCM IPv6 (puerto 59602), enlazando la huella enrolada en macOS con <code>fprintd</code> y PAM para <code>sudo</code>.</p>
         </div>
         <div class="arch-box">
-          <h3>3. Touch Bar & Teclado</h3>
-          <p>Filtro de debouncing de 40 ms para suprimir dobles pulsaciones en teclados mariposa y atenuación suave.</p>
+          <h3>3. Debounce & Persistencia</h3>
+          <p>Debouncing de 40 ms para evitar teclas repetidas y servicio systemd que mantiene vivo el enlace tras abrir y cerrar la tapa.</p>
         </div>
       </div>
 
       <div data-lang="es">
-        <h3>Prueba en Vivo de Conexión con BridgeOS</h3>
+        <h3>Prueba en Vivo del Sensor Touch ID y BiometricKit</h3>
       </div>
       <div data-lang="en" style="display:none;">
-        <h3>Live BridgeOS Handshake Verification</h3>
+        <h3>Live Touch ID & BiometricKit Session Diagnostic</h3>
       </div>
       <div class="terminal">
-==========================================================================<br/>
- Apple T2 BridgeOS RemoteXPC Link Diagnostic (Ubuntu 24.04 LTS)<br/>
-==========================================================================<br/>
-[+] Found network interface 't2_ncm' (Scope ID: 2)<br/>
-[+] Connecting to Apple T2 BridgeOS at [fe80::aede:48ff:fe33:4455]:59602 via t2_ncm...<br/>
-<span class="ok">[✓] TCP Connection established successfully!</span><br/>
-[+] Sent RemoteXPC HTTP/2 preface handshake...<br/>
-<span class="ok">[✓] Received valid response from Apple T2 BridgeOS (21 bytes):</span><br/>
-    Raw bytes: 00000c040000000000000300000064000400100000<br/>
-<span class="ok">[✓] Apple T2 RemoteXPC discovery & BiometricKit transport is ACTIVE and OPERATIONAL!</span>
+t2-touchid: watching /run/t2-touchid/fprint.sock for uid auto with flags 0x0<br/>
+<span class="ok">t2-touchid: BiometricKit session open</span><br/>
+<span class="ok">t2-touchid: macOS uid 501 has 1 enrolled finger(s), using it</span><br/>
+[✓] Biometric identity verified by Apple T2 Secure Enclave Processor (SEP)!
       </div>
     </div>
 

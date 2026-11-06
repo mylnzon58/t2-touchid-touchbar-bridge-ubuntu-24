@@ -1,0 +1,18 @@
+[Unit]
+Description=Apple T2 Touch ID bridge for fprintd
+After=network.target t2-touchid-bridge.service
+Wants=t2-touchid-bridge.service
+
+[Service]
+Type=simple
+EnvironmentFile=/etc/kait2en/t2-touchid.conf
+ExecStart=/usr/local/bin/t2-touchid --socket ${T2_TOUCHID_SOCKET} --uid ${T2_TOUCHID_UID} --flags ${T2_TOUCHID_FLAGS} --bind-user ${T2_TOUCHID_BIND_USER}
+Restart=always
+RestartSec=3
+
+RuntimeDirectory=t2-touchid
+RuntimeDirectoryMode=0700
+RuntimeDirectoryPreserve=yes
+
+[Install]
+WantedBy=multi-user.target
