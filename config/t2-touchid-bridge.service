@@ -1,0 +1,12 @@
+[Unit]
+Description=Apple T2 CDC-NCM Transport & Touch Bar Bridge for Ubuntu 24.04 LTS
+After=network.target udev.service
+Wants=network.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/t2-touchid-bridge-init.sh
+
+[Install]
+WantedBy=multi-user.target
