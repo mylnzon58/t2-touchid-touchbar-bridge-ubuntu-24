@@ -3,7 +3,7 @@ set -e
 
 echo "=========================================================================="
 echo " Apple T2 Touch Bar (OLED Dinámica) & Touch ID Bridge para Ubuntu 24.04 LTS"
-echo " Autor: Juan Monzón (@mylnzon58)"
+echo " Autor: Juan José Monzón (@mylnzon58)"
 echo " Investigación Upstream: Proyecto KAIT2EN (André Eikmeyer) & Aditya Garg"
 echo " Modelo Destino: Apple MacBook Pro 16,1 (A2141) / Serie Apple T2"
 echo " Activación Zero-Reboot: Funciona en vivo de inmediato sin reiniciar"
@@ -122,7 +122,7 @@ echo " Touch Bar:  Modo gráfico OLED dinámico activo (reloj, widgets, multimed
 echo " Touch ID:   Sensor biométrico enlazado con PAM para 'sudo' y autenticación."
 echo "--------------------------------------------------------------------------"
 echo " 💙 Mensaje del autor / Author's note:"
-echo " Soy Juan Monzón (@mylnzon58), desarrollador independiente y padre de dos niños."
+echo " Soy Juan José Monzón (@mylnzon58), desarrollador independiente argentino y padre de una niña y un niño pequeño."
 echo " Intento vivir de lo que amo creando soluciones abiertas para la comunidad."
 echo ""
 echo " ⭐ Si este proyecto encendió tu Touch Bar y Touch ID en Linux, déjame una estrella en GitHub:"
