@@ -120,5 +120,13 @@ echo "==========================================================================
 echo " [+] ¡Instalación y activación completada con éxito (Zero-Reboot)!"
 echo " Touch Bar:  Modo gráfico OLED dinámico activo (reloj, widgets, multimedia)."
 echo " Touch ID:   Sensor biométrico enlazado con PAM para 'sudo' y autenticación."
+echo "--------------------------------------------------------------------------"
+echo " 💙 Mensaje del autor / Author's note:"
+echo " Soy Juan Monzón (@mylnzon58), desarrollador independiente y padre de dos niños."
+echo " Intento vivir de lo que amo creando soluciones abiertas para la comunidad."
+echo ""
+echo " ⭐ Si este proyecto encendió tu Touch Bar y Touch ID en Linux, déjame una estrella en GitHub:"
+echo " 👉 https://github.com/mylnzon58/t2-touchid-touchbar-bridge-ubuntu-24"
+echo " ¡Muchas gracias por tu apoyo! / Thank you for your support!"
 echo "=========================================================================="
 python3 "$SCRIPT_DIR/scripts/test-t2-bridge.py" || true
