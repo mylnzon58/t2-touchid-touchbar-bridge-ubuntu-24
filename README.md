@@ -91,6 +91,21 @@ Deslice su dedo índice derecho por el lector de huellas dactilares
 
 ---
 
+### 🔒 Requisito Crítico: ¿Por qué se necesita Dual-Boot con macOS para Touch ID?
+
+1. **Las huellas viven en el Secure Enclave (SEP) del silicio Apple T2:**  
+   Las plantillas biométricas nunca se guardan en el disco de Linux ni de macOS; están grabadas físicamente dentro del coprocesador de seguridad ARM64 del chip T2 bajo su propio sistema operativo (**bridgeOS**).
+2. **El registro inicial (*enrollment*) exige macOS:**  
+   El protocolo para enrolar o registrar una huella nueva requiere una firma criptográfica con `SecureToken` propietaria de Apple ligada a las credenciales de macOS. La comunidad de código abierto ha logrado replicar el protocolo de **verificación**, pero no el de registro. Por lo tanto, **debes registrar tus dedos en los Ajustes del Sistema de macOS antes de poder usarlos en Linux**.
+3. **Cómo opera Linux:**  
+   Linux no almacena huellas. Cuando ejecutas `sudo`, el daemon `t2-touchid` se conecta mediante RemoteXPC a través del enlace interno IPv6 (`t2_ncm`) al puerto `59602` de bridgeOS y solicita verificar si el dedo coincide con las plantillas ya grabadas. bridgeOS compara la huella en milisegundos en el silicio y le envía a Linux un token de aprobación (`status 80 / 90`).
+4. **Por qué conservar la partición de macOS:**  
+   Si la batería se agota por completo o si ocurren múltiples intentos fallidos, el Secure Enclave se bloquea por seguridad de hardware (*lockout*) y requiere iniciar en macOS para desbloquearse. Además, las actualizaciones de firmware del chip T2 se distribuyen exclusivamente mediante actualizaciones de macOS. Mantener una partición mínima de macOS (30–40 GB) es una necesidad arquitectónica.
+5. **Independencia de la Touch Bar:**  
+   Touch ID opera a nivel de servicio de sistema (`t2-touchid.service` y PAM) y es **100% independiente** del motor visual que elijas para la pantalla OLED. Puedes utilizarlo con `tiny-dfr` o con entornos dinámicos avanzados como **[TuxBar](https://github.com/mylnzon58/tuxbar)**.
+
+---
+
 ### 4. Instalación Automatizada (1 Solo Paso)
 ```bash
 git clone https://github.com/mylnzon58/t2-touchid-touchbar-bridge-ubuntu-24.git
@@ -149,6 +164,21 @@ Deslice su dedo índice derecho por el lector de huellas dactilares
 ```
 - Rest your finger on the sapphire Touch ID sensor: **authenticated in 0.2 seconds**.
 - Press **`Esc`**: immediately aborts the scan and falls back to password entry without timeout.
+
+---
+
+### 🔒 Architectural Requirement: Why macOS Dual-Boot is Required for Touch ID
+
+1. **Fingerprints Reside in the Apple T2 Secure Enclave (SEP):**  
+   Biometric templates are never saved on Linux or macOS disks; they are physically burned into the ARM64 Secure Enclave coprocessor running **bridgeOS** inside the T2 chip.
+2. **Initial Enrollment Requires macOS:**  
+   Enrolling a new finger requires an Apple-signed `SecureToken` cryptographic handshake linked to macOS credentials. Open-source developers reverse-engineered the **verification** pipeline, but not enrollment. Therefore, **you must enroll your fingerprints inside macOS System Settings before they can be used under Linux**.
+3. **How Linux Verifies Your Finger:**  
+   Linux stores zero biometric data. When running `sudo`, the `t2-touchid` daemon talks to BridgeOS over the internal IPv6 (`t2_ncm`) CDC-NCM link on port `59602` via RemoteXPC. BridgeOS verifies the finger in silicon and sends an authorization approval token back to Linux (`status 80 / 90`).
+4. **Why You Must Keep a macOS Partition:**  
+   If the battery completely drains or multiple invalid scans occur, the Secure Enclave enters a hardware safety lockout, requiring macOS login to re-arm the sensor. Additionally, T2 bridgeOS firmware updates are only distributed via macOS system updates. Keeping a small macOS partition (30–40 GB) is an architectural requirement.
+5. **Decoupling Touch ID from the Touch Bar:**  
+   Touch ID operates strictly as a system PAM service (`t2-touchid.service`) and is **100% independent** of which display engine controls the OLED Touch Bar. It works seamlessly whether using `tiny-dfr` or advanced custom environments like **[TuxBar](https://github.com/mylnzon58/tuxbar)**.
 
 ---
 
