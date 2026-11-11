@@ -58,8 +58,10 @@ El instalador automatizado gestiona e integra los siguientes recursos en Ubuntu 
 | **`config.toml`** | `/etc/tiny-dfr/config.toml` | Configuración con `SpecialExtendedMode=true`: reloj 24h, batería, lanzador de apps y controles táctiles. |
 | **`appletbdrm`** | Driver Kernel (`appletbdrm.ko`) | Expone la pantalla OLED de la Touch Bar como dispositivo DRM en `/dev/dri/card*`. |
 | **`t2-touchid`** | Binario Rust (`/usr/local/bin/t2-touchid`) | Daemon compilado nativamente que comunica Linux con el Secure Enclave (SEP) de Apple T2. |
-| **`t2-touchid.conf`** | `/etc/kait2en/t2-touchid.conf` | Configuración de usuario para vinculación biométrica automática (`zeeroj` / `auto`). |
+| **`t2-touchid.conf`** | `/etc/kait2en/t2-touchid.conf` | Configuración de usuario para vinculación biométrica automática (`$USER` / `auto`). |
 | **`t2-touchid.service`** | `/etc/systemd/system/t2-touchid.service` | Servicio systemd persistente que escucha peticiones de verificación de huella. |
+| **`t2-touchid-bridge.service`** | `/etc/systemd/system/t2-touchid-bridge.service` | Servicio de inicio temprano que asigna IPv6 con `nodad` en `t2_ncm` para evitar `os error 99` tras reiniciar. |
+| **`t2-touchid-sleep`** | `/lib/systemd/system-sleep/t2-touchid-sleep` | Gancho persistente post-suspensión que restablece el enlace del T2 al abrir la tapa. |
 | **`fprintd-t2-touchid.conf`** | `/etc/systemd/system/fprintd.service.d/` | Drop-in que conecta `libfprint` al socket virtual `/run/t2-touchid/fprint.sock`. |
 | **`fprintd` / `libpam-fprintd`** | Paquetes oficiales Ubuntu | Módulo PAM (`pam_fprintd.so`) para autenticar `sudo` y login con huella dactilar. |
 | **`10-t2-services.conf`** | `/etc/NetworkManager/conf.d/` | Regla para aislar la interfaz interna USB CDC-NCM (`mac:ac:de:48:00:11:22`). |
@@ -75,7 +77,7 @@ $ fprintd-list $USER
 found 1 devices
 Device at /net/reactivated/Fprint/Device/0
 Using device /net/reactivated/Fprint/Device/0
-Fingerprints for user zeeroj on Virtual device with storage and identification:
+Fingerprints for user <username> on Virtual device with storage and identification:
  - #0: right-index-finger
 ```
 
@@ -128,6 +130,8 @@ The automated installer manages and deploys the following resources on Ubuntu 24
 | **`t2-touchid`** | Rust binary (`/usr/local/bin/t2-touchid`) | Native daemon bridging Linux with the Apple T2 Secure Enclave Processor (SEP). |
 | **`t2-touchid.conf`** | `/etc/kait2en/t2-touchid.conf` | Configuration binding pre-enrolled macOS identities to the Linux account. |
 | **`t2-touchid.service`** | `/etc/systemd/system/t2-touchid.service` | Systemd service managing biometric authentication requests. |
+| **`t2-touchid-bridge.service`** | `/etc/systemd/system/t2-touchid-bridge.service` | Early boot systemd service enforcing IPv6 `nodad` on `t2_ncm` to eliminate `os error 99` across reboots. |
+| **`t2-touchid-sleep`** | `/lib/systemd/system-sleep/t2-touchid-sleep` | Sleep/resume hook ensuring immediate re-arming of the biometric link when waking from suspend. |
 | **`fprintd-t2-touchid.conf`** | `/etc/systemd/system/fprintd.service.d/` | Drop-in routing `libfprint` to virtual socket `/run/t2-touchid/fprint.sock`. |
 | **`fprintd` / `libpam-fprintd`** | Ubuntu upstream packages | Standard PAM integration (`pam_fprintd.so`) for fingerprint-enabled `sudo` & login. |
 | **`10-t2-services.conf`** | `/etc/NetworkManager/conf.d/` | Isolates the internal CDC-NCM link (`mac:ac:de:48:00:11:22`) from NetworkManager. |

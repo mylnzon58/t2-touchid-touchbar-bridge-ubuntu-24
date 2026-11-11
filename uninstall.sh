@@ -16,6 +16,7 @@ systemctl disable --now t2-touchid-bridge.service 2>/dev/null || true
 rm -f /etc/systemd/system/t2-touchid.service
 rm -f /etc/systemd/system/t2-touchid-bridge.service
 rm -f /etc/systemd/system/fprintd.service.d/fprintd-t2-touchid.conf
+rm -f /lib/systemd/system-sleep/t2-touchid-sleep
 rm -f /usr/local/bin/t2-touchid
 rm -f /usr/local/sbin/t2-touchid-bridge-init.sh
 systemctl daemon-reload

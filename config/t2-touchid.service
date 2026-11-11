@@ -1,6 +1,7 @@
 [Unit]
 Description=Apple T2 Touch ID bridge for fprintd
 After=network.target t2-touchid-bridge.service
+Requires=t2-touchid-bridge.service
 Wants=t2-touchid-bridge.service
 
 [Service]
@@ -16,4 +17,3 @@ RuntimeDirectoryPreserve=yes
 
 [Install]
 WantedBy=multi-user.target
-

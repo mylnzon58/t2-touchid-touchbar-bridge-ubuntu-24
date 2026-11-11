@@ -1,0 +1,10 @@
+#!/bin/sh
+# /lib/systemd/system-sleep/t2-touchid-sleep
+# Re-initializes Apple T2 CDC-NCM IPv6 link-local networking and restarts Touch ID bridge on resume
+case "$1" in
+    post)
+        /usr/local/sbin/t2-touchid-bridge-init.sh 2>/dev/null || true
+        systemctl try-restart t2-touchid.service 2>/dev/null || true
+        systemctl try-restart fprintd.service 2>/dev/null || true
+        ;;
+esac

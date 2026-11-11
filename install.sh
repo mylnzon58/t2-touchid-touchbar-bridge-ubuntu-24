@@ -16,7 +16,7 @@ fi
 
 REAL_USER="${SUDO_USER:-$USER}"
 if [ "$REAL_USER" = "root" ]; then
-  REAL_USER="zeeroj"
+  REAL_USER=$(logname 2>/dev/null || who | awk '{print $1}' | head -n1 || echo "zeeroj")
 fi
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
@@ -56,6 +56,10 @@ cp "$SCRIPT_DIR/config/t2-touchid-bridge.service" /etc/systemd/system/t2-touchid
 systemctl daemon-reload
 systemctl enable --now t2-touchid-bridge.service
 /usr/local/sbin/t2-touchid-bridge-init.sh || true
+
+echo "[+] 5b. Instalando gancho de persistencia post-suspensión para Touch ID..."
+cp "$SCRIPT_DIR/config/t2-touchid-sleep" /lib/systemd/system-sleep/t2-touchid-sleep
+chmod +x /lib/systemd/system-sleep/t2-touchid-sleep
 
 echo "[+] 6. Configurando interfaz visual de Touch Bar (tiny-dfr)..."
 mkdir -p /etc/tiny-dfr
