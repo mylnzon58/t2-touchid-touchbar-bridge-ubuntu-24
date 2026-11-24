@@ -1,264 +1,561 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>T2-BRIDGE(8) — Apple T2 Touch Bar (OLED Dinámica Zero-Reboot) & Touch ID Bridge para Ubuntu 24.04 LTS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>T2-BRIDGE(8) — Apple T2 Touch Bar (OLED Dinámica Zero-Reboot) &amp; Touch ID Bridge para Ubuntu 24.04 LTS</title>
   <meta name="description" content="Apple T2 BridgeOS RemoteXPC transport, Dynamic OLED Touch Bar with Zero-Reboot activation, and Touch ID biometric bridge architecture for Ubuntu 24.04 LTS. Por Juan Monzón (@mylnzon58)." />
   <meta name="keywords" content="Apple T2 Touch ID Linux, Apple T2 Touch Bar Ubuntu 24.04, MacBook Pro A2141 Touch ID, tiny-dfr OLED Zero Reboot, t2_ncm bridgeOS RemoteXPC port 59602, Juan Monzon, mylnzon58" />
   <meta name="author" content="Juan Monzón (mylnzon58@gmail.com)" />
   <meta name="robots" content="index, follow" />
 
-  <!-- OpenGraph -->
-  <meta property="og:title" content="Apple T2 Touch Bar (OLED Dinámica Zero-Reboot) & Touch ID Bridge para Ubuntu 24.04 LTS" />
+  <meta property="og:title" content="Apple T2 Touch Bar (OLED Dinámica Zero-Reboot) &amp; Touch ID Bridge para Ubuntu 24.04 LTS" />
   <meta property="og:description" content="Activación sin reiniciar de la Touch Bar OLED dinámica y Touch ID nativo para sudo en Ubuntu 24.04 LTS." />
   <meta property="og:url" content="https://mylnzon58.github.io/t2-touchid-touchbar-bridge-ubuntu-24/" />
   <meta property="og:type" content="website" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="canonical" href="https://mylnzon58.github.io/t2-touchid-touchbar-bridge-ubuntu-24/" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23007AFF'/%3E%3Crect x='6' y='13' width='20' height='6' rx='3' fill='%23FFFFFF'/%3E%3C/svg%3E" />
 
   <style>
     :root {
-      --bg-dark: #0a0d14;
-      --bg-card: #131722;
-      --bg-terminal: #07090e;
-      --accent-orange: #e95420;
-      --accent-green: #10b981;
-      --accent-cyan: #00b4d8;
-      --text-main: #e2e8f0;
-      --text-muted: #94a3b8;
-      --border: #1e2638;
+      --canvas: #F5F5F7;
+      --surface: #FFFFFF;
+      --track: #E5E5EA;
+      --hairline: #E5E5EA;
+      --ink: #1D1D1F;
+      --ink-secondary: #6E6E73;
+      --accent: #007AFF;
+      --accent-ink: #FFFFFF;
+      --status-ok: #248A3D;
+      --code-bg: #F1F1F4;
+      --header-glass: rgba(245, 245, 247, 0.86);
+      --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Ubuntu, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, "Ubuntu Mono", Menlo, Consolas, monospace;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html[data-theme="dark"] {
+      --canvas: #000000;
+      --surface: #1C1C1E;
+      --track: #2C2C2E;
+      --hairline: #2C2C2E;
+      --ink: #F5F5F7;
+      --ink-secondary: #98989D;
+      --accent: #0A84FF;
+      --accent-ink: #FFFFFF;
+      --status-ok: #30D158;
+      --code-bg: #121214;
+      --header-glass: rgba(0, 0, 0, 0.86);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      font-family: "Ubuntu", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      line-height: 1.6;
-      padding-bottom: 60px;
-    }
-    header {
-      background: linear-gradient(135deg, #18121d 0%, #0d111a 100%);
-      border-bottom: 2px solid var(--accent-orange);
-      padding: 40px 20px;
-      text-align: center;
-      position: relative;
-    }
-    .lang-switcher {
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      display: flex;
-      gap: 8px;
-    }
-    .lang-btn {
-      background: #1e2638;
-      border: 1px solid #334155;
-      color: #cbd5e1;
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .lang-btn.active {
-      background: var(--accent-orange);
-      color: #fff;
-      border-color: var(--accent-orange);
-    }
-    h1 {
-      font-size: 28px;
-      margin-bottom: 12px;
-      color: #fff;
-    }
-    p.lead {
+      background-color: var(--canvas);
+      color: var(--ink);
+      font-family: var(--font-sans);
       font-size: 16px;
-      color: var(--text-muted);
-      max-width: 800px;
+      line-height: 1.6;
+      font-variant-numeric: tabular-nums;
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 0.9em;
+      background: var(--track);
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--header-glass);
+      backdrop-filter: saturate(160%) blur(16px);
+      -webkit-backdrop-filter: saturate(160%) blur(16px);
+      border-bottom: 1px solid var(--hairline);
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    .top-bar-inner {
+      max-width: 980px;
       margin: 0 auto;
-    }
-    .container {
-      max-width: 960px;
-      margin: 30px auto;
-      padding: 0 20px;
-    }
-    .card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 24px;
-    }
-    .terminal {
-      background: var(--bg-terminal);
-      border: 1px solid #1e293b;
-      border-radius: 8px;
-      padding: 16px;
-      font-family: "Ubuntu Mono", monospace;
-      font-size: 14px;
-      color: #38bdf8;
-      overflow-x: auto;
-      margin: 14px 0;
-    }
-    .terminal .ok { color: var(--accent-green); }
-    .badge-row {
+      padding: 12px 20px;
       display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
       flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 20px;
     }
-    .badge {
+
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+    }
+
+    .brand span.sub {
+      color: var(--ink-secondary);
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      font-weight: 500;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .segmented {
+      display: inline-flex;
+      background: var(--track);
+      padding: 3px;
+      border-radius: 11px;
+    }
+
+    .segmented button {
+      border: none;
+      background: transparent;
+      color: var(--ink-secondary);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 600;
+      min-height: 36px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .segmented button.active {
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    .icon-btn {
       display: inline-flex;
       align-items: center;
-      padding: 5px 12px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 700;
-      text-decoration: none;
+      justify-content: center;
+      gap: 6px;
+      min-height: 44px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid var(--hairline);
+      background: var(--surface);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
     }
-    .badge-orange { background: #e95420; color: #fff; }
-    .badge-cyan { background: #00b4d8; color: #000; }
-    .badge-green { background: #10b981; color: #000; }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 36px 20px 0;
+    }
+
+    .hero {
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--hairline);
+      margin-bottom: 32px;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink-secondary);
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: clamp(28px, 4vw, 40px);
+      line-height: 1.12;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 14px;
+      max-width: 28ch;
+    }
+
+    p.lead {
+      font-size: 17px;
+      color: var(--ink-secondary);
+      max-width: 68ch;
+      margin-bottom: 24px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
     .btn {
-      display: inline-block;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 22px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 600;
       text-decoration: none;
-      transition: 0.2s;
-      margin-right: 10px;
-      margin-top: 10px;
+      white-space: nowrap;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.15s ease;
     }
-    .btn-primary { background: var(--accent-orange); color: #fff; }
-    .btn-secondary { background: #1e2638; color: #fff; border: 1px solid #334155; }
+
+    .btn:hover { text-decoration: none; opacity: 0.9; }
+    .btn-primary { background: var(--accent); color: var(--accent-ink); }
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--ink);
+      border: 1px solid var(--hairline);
+    }
+
+    .surface-section {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    .surface-section h2 {
+      font-size: 21px;
+      letter-spacing: -0.015em;
+      margin-bottom: 10px;
+      color: var(--ink);
+    }
+
+    .surface-section > p,
+    .surface-section > div > p {
+      color: var(--ink-secondary);
+      margin-bottom: 16px;
+    }
+
+    .terminal-wrap {
+      position: relative;
+      background: var(--code-bg);
+      border: 1px solid var(--hairline);
+      border-radius: 14px;
+      padding: 16px 18px;
+      margin: 16px 0;
+    }
+
+    .terminal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--ink-secondary);
+    }
+
+    .copy-btn {
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid var(--hairline);
+      background: var(--surface);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .terminal {
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      line-height: 1.65;
+      color: var(--ink);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .terminal .ok {
+      color: var(--status-ok);
+      font-weight: 600;
+    }
+
     .arch-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 16px;
-      margin: 20px 0;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--hairline);
+      border: 1px solid var(--hairline);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-top: 20px;
     }
+
     .arch-box {
-      background: #0f131c;
-      border: 1px solid #222d42;
-      border-radius: 8px;
-      padding: 16px;
+      background: var(--surface);
+      padding: 20px;
     }
-    .arch-box h3 { color: var(--accent-cyan); font-size: 16px; margin-bottom: 8px; }
-    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
-    th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #1e2638; font-size: 14px; }
-    th { color: var(--accent-orange); background: #0c0f17; }
+
+    .arch-box h3 {
+      color: var(--ink);
+      font-size: 15.5px;
+      margin-bottom: 8px;
+    }
+
+    .arch-box p {
+      color: var(--ink-secondary);
+      font-size: 14px;
+    }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    th, td {
+      padding: 13px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--hairline);
+      font-size: 14.5px;
+      vertical-align: top;
+    }
+    th {
+      color: var(--ink-secondary);
+      font-size: 12.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 600;
+    }
+    tr:last-child td { border-bottom: none; }
+
+    footer {
+      max-width: 980px;
+      margin: 28px auto 0;
+      padding: 20px 20px 0;
+      border-top: 1px solid var(--hairline);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      color: var(--ink-secondary);
+      font-size: 13.5px;
+    }
+
+    [data-lang="en"] { display: none; }
+    body.is-en [data-lang="es"] { display: none; }
+    body.is-en [data-lang="en"] { display: block; }
+    body.is-en span[data-lang="en"],
+    body.is-en a[data-lang="en"] { display: inline-flex; }
+
+    @media (max-width: 780px) {
+      .arch-grid { grid-template-columns: 1fr; }
+      .surface-section { padding: 20px; }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <div class="lang-switcher">
-      <button class="lang-btn active" id="btn-es" onclick="setLang('es')">ES</button>
-      <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
-    </div>
-    <div data-lang="es">
-      <h1>Apple T2 Touch Bar (OLED Dinámica Zero-Reboot) & Touch ID para Ubuntu 24.04 LTS</h1>
-      <p class="lead">Activación en vivo de la Touch Bar OLED sin necesidad de reiniciar y autenticación biométrica Touch ID con Secure Enclave para sudo en Ubuntu 24.04 LTS.</p>
-    </div>
-    <div data-lang="en" style="display:none;">
-      <h1>Apple T2 Touch Bar (Zero-Reboot Dynamic OLED) & Touch ID for Ubuntu 24.04 LTS</h1>
-      <p class="lead">Live zero-reboot dynamic OLED Touch Bar activation and native Touch ID biometric authentication for sudo in Ubuntu 24.04 LTS.</p>
-    </div>
-    <div class="badge-row">
-      <span class="badge badge-orange">Ubuntu 24.04 LTS</span>
-      <span class="badge badge-cyan">Touch Bar Zero-Reboot</span>
-      <span class="badge badge-green">Touch ID + PAM sudo</span>
+  <header class="top-bar">
+    <div class="top-bar-inner">
+      <div class="brand">
+        <span>T2-BRIDGE(8)</span>
+        <span class="sub">Ubuntu 24.04 LTS · Apple T2</span>
+      </div>
+      <div class="controls">
+        <div class="segmented" role="group" aria-label="Idioma">
+          <button type="button" id="btn-es" class="active" onclick="setLang('es')">ES</button>
+          <button type="button" id="btn-en" onclick="setLang('en')">EN</button>
+        </div>
+        <button type="button" id="btn-theme" class="icon-btn" onclick="toggleTheme()" title="Cambiar entre modo claro y oscuro OLED" aria-label="Cambiar entre modo claro y oscuro OLED">
+          <span id="theme-label">OLED Oscuro</span>
+        </button>
+      </div>
     </div>
   </header>
 
-  <div class="container">
-    <div class="card">
+  <main class="container">
+    <section class="hero">
+      <p class="eyebrow">Ubuntu 24.04 LTS · Touch Bar Zero-Reboot · Touch ID + PAM sudo</p>
       <div data-lang="es">
-        <h2>⚡ El Avance: Activación Zero-Reboot de la Touch Bar</h2>
+        <h1>Apple T2 Touch Bar (OLED Dinámica Zero-Reboot) &amp; Touch ID para Ubuntu 24.04 LTS</h1>
+        <p class="lead">Activación en vivo de la Touch Bar OLED sin necesidad de reiniciar y autenticación biométrica Touch ID con Secure Enclave para sudo en Ubuntu 24.04 LTS.</p>
+      </div>
+      <div data-lang="en">
+        <h1>Apple T2 Touch Bar (Zero-Reboot Dynamic OLED) &amp; Touch ID for Ubuntu 24.04 LTS</h1>
+        <p class="lead">Live zero-reboot dynamic OLED Touch Bar activation and native Touch ID biometric authentication for sudo in Ubuntu 24.04 LTS.</p>
+      </div>
+      <div class="actions">
+        <a href="#instalar" class="btn btn-primary" data-lang="es">Instalación en 1 paso</a>
+        <a href="#instalar" class="btn btn-primary" data-lang="en">1-Step Installation</a>
+        <a href="https://github.com/mylnzon58/t2-touchid-touchbar-bridge-ubuntu-24" class="btn btn-secondary" target="_blank" rel="noopener">Ver en GitHub</a>
+        <a href="https://tecito.app/juanjoclassic" class="btn btn-secondary" target="_blank" rel="noopener">Apoyar proyecto (Tecito)</a>
+      </div>
+    </section>
+
+    <section class="surface-section">
+      <div data-lang="es">
+        <h2>El Avance: Activación Zero-Reboot de la Touch Bar</h2>
         <p>Hasta ahora la comunidad creía obligatorio reiniciar para activar los gráficos OLED. Descubrimos la secuencia de reseteo USB exacta para encenderla en vivo de inmediato:</p>
       </div>
-      <div data-lang="en" style="display:none;">
-        <h2>⚡ The Breakthrough: Zero-Reboot OLED Touch Bar Activation</h2>
+      <div data-lang="en">
+        <h2>The Breakthrough: Zero-Reboot OLED Touch Bar Activation</h2>
         <p>Until now, upstream docs claimed a cold reboot was mandatory. We uncovered the exact USB reset sequence to activate it live instantly:</p>
       </div>
 
-      <div class="terminal">
-[+] Reseteando endpoint USB de Touch Bar (Config 0)...<br/>
-[+] Conmutando a USB Configuration 2 (OLED Display)...<br/>
-[+] Recargando driver de pantalla appletbdrm...<br/>
-<span class="ok">[✓] [drm] Initialized appletbdrm 1.0.0 for 7-6:2.1 on minor 0</span><br/>
-<span class="ok">[✓] tiny-dfr.service: Active (running) — Widgets OLED dinámicos proyectados en vivo!</span>
+      <div class="terminal-wrap">
+        <div class="terminal-head">
+          <span>dmesg / systemd verification</span>
+        </div>
+        <pre class="terminal">[+] Reseteando endpoint USB de Touch Bar (Config 0)...
+[+] Conmutando a USB Configuration 2 (OLED Display)...
+[+] Recargando driver de pantalla appletbdrm...
+<span class="ok">[OK] [drm] Initialized appletbdrm 1.0.0 for 7-6:2.1 on minor 0</span>
+<span class="ok">[OK] tiny-dfr.service: Active (running) — Widgets OLED dinámicos proyectados en vivo</span></pre>
       </div>
 
-      <div class="arch-grid">
+      <div class="arch-grid" data-lang="es">
         <div class="arch-box">
           <h3>1. Touch Bar OLED Dinámica</h3>
           <p>Reloj 24h, estado de batería, lanzador de apps y controles multimedia proyectados directamente en la barra mediante <code>tiny-dfr-adv</code>.</p>
         </div>
         <div class="arch-box">
           <h3>2. Touch ID con Secure Enclave</h3>
-          <p>Puente <code>t2-touchid</code> en Rust sobre CDC-NCM IPv6 (puerto 59602), enlazando tu huella con <code>fprintd</code> y PAM para <code>sudo</code> en 0.2s.</p>
+          <p>Puente <code>t2-touchid</code> en Rust sobre CDC-NCM IPv6 (puerto 59602), enlazando tu huella con <code>fprintd</code> y PAM para <code>sudo</code> en 0.2 s.</p>
         </div>
         <div class="arch-box">
           <h3>3. Zero-Reboot Live Setup</h3>
           <p>Secuencia de activación en caliente sin reiniciar la máquina, con persistencia garantizada en suspensiones y reinicios.</p>
         </div>
       </div>
-    </div>
 
-    <div class="card">
-      <div data-lang="es">
-        <h2>📦 Recursos Instalados en el Sistema</h2>
+      <div class="arch-grid" data-lang="en">
+        <div class="arch-box">
+          <h3>1. Dynamic OLED Touch Bar</h3>
+          <p>24h clock, battery state, app launcher and media controls rendered directly on the OLED bar via <code>tiny-dfr-adv</code>.</p>
+        </div>
+        <div class="arch-box">
+          <h3>2. Secure Enclave Touch ID</h3>
+          <p>Rust <code>t2-touchid</code> bridge over CDC-NCM IPv6 (port 59602), pairing fingerprint verification with <code>fprintd</code> and PAM for 0.2 s <code>sudo</code>.</p>
+        </div>
+        <div class="arch-box">
+          <h3>3. Zero-Reboot Live Setup</h3>
+          <p>Hot-activation sequence without rebooting the laptop, preserving persistence across sleep/wake and restarts.</p>
+        </div>
       </div>
-      <div data-lang="en" style="display:none;">
-        <h2>📦 Installed System Resources</h2>
-      </div>
+    </section>
 
-      <table>
-        <thead>
-          <tr><th>Recurso</th><th>Ruta / Paquete</th><th>Función</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><b>tiny-dfr-adv</b></td><td>Paquete APT (0.3.1)</td><td>Daemon que dibuja los widgets OLED y atiende eventos táctiles.</td></tr>
-          <tr><td><b>config.toml</b></td><td>/etc/tiny-dfr/config.toml</td><td>Diseño visual con reloj, batería, accesos y sliders de volumen/brillo.</td></tr>
-          <tr><td><b>appletbdrm</b></td><td>Módulo kernel</td><td>Driver DRM que expone el framebuffer OLED en /dev/dri/card*.</td></tr>
-          <tr><td><b>t2-touchid</b></td><td>/usr/local/bin/t2-touchid</td><td>Daemon en Rust puente entre BridgeOS SEP y libfprint.</td></tr>
-          <tr><td><b>fprintd / PAM</b></td><td>libpam-fprintd</td><td>Autenticación biométrica con huella en sudo y login.</td></tr>
-          <tr><td><b>t2_ncm bridge</b></td><td>/etc/systemd/system/</td><td>Servicio de red interna CDC-NCM IPv6 para dialogar con el T2.</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="card">
+    <section class="surface-section">
       <div data-lang="es">
-        <h2>🚀 Instalación en 1 Solo Paso</h2>
+        <h2>Recursos Instalados en el Sistema</h2>
+      </div>
+      <div data-lang="en">
+        <h2>Installed System Resources</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Recurso</th>
+              <th>Ruta / Paquete</th>
+              <th>Función</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>tiny-dfr-adv</strong></td><td><code>Paquete APT (0.3.1)</code></td><td>Daemon que dibuja los widgets OLED y atiende eventos táctiles.</td></tr>
+            <tr><td><strong>config.toml</strong></td><td><code>/etc/tiny-dfr/config.toml</code></td><td>Diseño visual con reloj, batería, accesos y sliders de volumen/brillo.</td></tr>
+            <tr><td><strong>appletbdrm</strong></td><td><code>Módulo kernel</code></td><td>Driver DRM que expone el framebuffer OLED en <code>/dev/dri/card*</code>.</td></tr>
+            <tr><td><strong>t2-touchid</strong></td><td><code>/usr/local/bin/t2-touchid</code></td><td>Daemon en Rust puente entre BridgeOS SEP y libfprint.</td></tr>
+            <tr><td><strong>fprintd / PAM</strong></td><td><code>libpam-fprintd</code></td><td>Autenticación biométrica con huella en sudo y login.</td></tr>
+            <tr><td><strong>t2_ncm bridge</strong></td><td><code>/etc/systemd/system/</code></td><td>Servicio de red interna CDC-NCM IPv6 para dialogar con el T2.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="instalar" class="surface-section">
+      <div data-lang="es">
+        <h2>Instalación en 1 Solo Paso</h2>
         <p>Clona el repositorio y ejecuta el instalador automatizado:</p>
       </div>
-      <div data-lang="en" style="display:none;">
-        <h2>🚀 1-Step Installation</h2>
+      <div data-lang="en">
+        <h2>1-Step Installation</h2>
         <p>Clone the repository and run the automated installer:</p>
       </div>
-      <div class="terminal" style="color: #f8fafc;">
-git clone https://github.com/mylnzon58/t2-touchid-touchbar-bridge-ubuntu-24.git<br/>
-cd t2-touchid-touchbar-bridge-ubuntu-24<br/>
-chmod +x install.sh<br/>
-sudo ./install.sh
+
+      <div class="terminal-wrap">
+        <div class="terminal-head">
+          <span>bash</span>
+          <button type="button" class="copy-btn" onclick="copyInstall(this)" title="Copiar comandos de instalación">Copiar</button>
+        </div>
+        <pre id="install-cmd" class="terminal">git clone https://github.com/mylnzon58/t2-touchid-touchbar-bridge-ubuntu-24.git
+cd t2-touchid-touchbar-bridge-ubuntu-24
+chmod +x install.sh
+sudo ./install.sh</pre>
       </div>
-      <a href="https://github.com/mylnzon58/t2-touchid-touchbar-bridge-ubuntu-24" class="btn btn-primary" target="_blank">Ver en GitHub ⭐</a>
-      <a href="https://tecito.app/juanjoclassic" class="btn btn-secondary" target="_blank">☕ Donar un Tecito</a>
-    </div>
-  </div>
+
+      <div class="actions" style="margin-top: 18px;">
+        <a href="https://github.com/mylnzon58/t2-touchid-touchbar-bridge-ubuntu-24" class="btn btn-primary" target="_blank" rel="noopener">Ver en GitHub</a>
+        <a href="https://tecito.app/juanjoclassic" class="btn btn-secondary" target="_blank" rel="noopener">Donar un Tecito</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>T2-BRIDGE(8) · Ubuntu 24.04 LTS</span>
+    <span>Por Juan Monzón (<a href="https://github.com/mylnzon58" target="_blank" rel="noopener">@mylnzon58</a>)</span>
+  </footer>
 
   <script>
+    (function initTheme() {
+      var saved = localStorage.getItem('t2_bridge_theme');
+      if (saved === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.getElementById('theme-label').textContent = 'Modo Claro';
+      }
+    })();
+
+    function toggleTheme() {
+      var root = document.documentElement;
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('t2_bridge_theme', next);
+      document.getElementById('theme-label').textContent = next === 'dark' ? 'Modo Claro' : 'OLED Oscuro';
+    }
+
     function setLang(lang) {
-      document.querySelectorAll('[data-lang]').forEach(el => {
-        el.style.display = (el.getAttribute('data-lang') === lang) ? 'block' : 'none';
+      document.body.classList.toggle('is-en', lang === 'en');
+      document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    }
+
+    function copyInstall(btn) {
+      var text = document.getElementById('install-cmd').textContent;
+      navigator.clipboard.writeText(text).then(function () {
+        var prev = btn.textContent;
+        btn.textContent = document.body.classList.contains('is-en') ? 'Copied' : 'Copiado';
+        setTimeout(function () { btn.textContent = prev; }, 1600);
       });
-      document.getElementById('btn-es').className = 'lang-btn ' + (lang === 'es' ? 'active' : '');
-      document.getElementById('btn-en').className = 'lang-btn ' + (lang === 'en' ? 'active' : '');
     }
   </script>
 </body>
