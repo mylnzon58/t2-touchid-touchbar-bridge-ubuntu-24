@@ -1,15 +1,15 @@
 # Apple T2 Touch Bar (OLED Dinámica Zero-Reboot) & Touch ID Bridge para Ubuntu 24.04 LTS
 
-[![Ubuntu 24.04 LTS](https://img.shields.io/badge/Ubuntu-24.04_LTS_(Noble)-E95420?logo=ubuntu&logoColor=white)](#)
-[![Linux Kernel T2](https://img.shields.io/badge/Kernel-linux--t2_(v7.x)-00B4D8?logo=linux&logoColor=white)](#)
-[![Zero Reboot](https://img.shields.io/badge/Touch_Bar-Zero--Reboot_Live_Activation-10B981?logo=apple&logoColor=white)](#)
-[![Touch ID Biometrics](https://img.shields.io/badge/Biometrics-Touch_ID_%2B_PAM_sudo-10B981?logo=apple&logoColor=white)](#)
-[![Author](https://img.shields.io/badge/Author-Juan_Monz%C3%B3n_(@mylnzon58)-10B981?logo=github&logoColor=white)](https://github.com/mylnzon58)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Juan_Monz%C3%B3n-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/juan-m-97b85681/)
-[![Instagram](https://img.shields.io/badge/Instagram-%40juanjoclassic-E4405F?logo=instagram&logoColor=white)](https://www.instagram.com/juanjoclassic/)
-[![Invitame un Tecito](https://img.shields.io/badge/%E2%98%95_Donar_un_Tecito-tecito.app%2Fjuanjoclassic-FF813F?style=flat&logo=buy-me-a-coffee&logoColor=white)](https://tecito.app/juanjoclassic)
-[![Sponsor on Patreon](https://img.shields.io/badge/Patreon-Planes_para_Sponsors-FF424D?style=flat&logo=patreon&logoColor=white)](https://www.patreon.com/JuanjoClassic)
-[![License: GPL-3.0](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE)
+[![Ubuntu 24.04 LTS](assets/badges/ubuntu-24-04-lts-noble-e95420-badge-0eddb5.svg)](#)
+[![Linux Kernel T2](assets/badges/kernel-linux-t2-v7-x-00b4d8-badge-bb607d.svg)](#)
+[![Zero Reboot](assets/badges/touch-bar-zero-reboot-live-activation-10b9-badge-4761ea.svg)](#)
+[![Touch ID Biometrics](assets/badges/biometrics-touch-id-pam-sudo-10b981-badge-69cd7e.svg)](#)
+[![Author](assets/badges/author-juan-monz-n-mylnzon58-10b981-badge-b4c2f7.svg)](https://github.com/mylnzon58)
+[![LinkedIn](assets/badges/linkedin-juan-monz-n-0a66c2-badge-e9a39f.svg)](https://www.linkedin.com/in/juan-m-97b85681/)
+[![Instagram](assets/badges/instagram-juanjoclassic-e4405f-badge-cb0a18.svg)](https://www.instagram.com/juanjoclassic/)
+[![Invitame un Tecito](assets/badges/donar-un-tecito-tecito-app-juanjoclassic-f-badge-19a818.svg)](https://tecito.app/juanjoclassic)
+[![Sponsor on Patreon](assets/badges/patreon-planes-para-sponsors-ff424d-badge-d934e2.svg)](https://www.patreon.com/JuanjoClassic)
+[![License: GPL-3.0](assets/badges/license-gpl-3-0-blue-svg-badge-93277f.svg)](LICENSE)
 
 > **Author & Maintainer:** **[Juan Monzón (@mylnzon58)](https://www.linkedin.com/in/juan-m-97b85681/)** — *AI Product | Full Stack Developer | Digital Products & Growth* (Argentina)  
 > **Upstream Research & Core Protocols:** **[André Eikmeyer / KAIT2EN Project](https://github.com/kaiT2en)** & **[Aditya Garg](https://github.com/AdityaGarg8)**  
@@ -19,16 +19,16 @@
 
 <p align="left">
   <a href="https://www.patreon.com/JuanjoClassic" target="_blank">
-    <img src="https://img.shields.io/badge/Patreon-Planes_para_Sponsors-FF424D?style=for-the-badge&logo=patreon&logoColor=white" alt="Patreon - Planes para Sponsors" />
+    <img src="assets/badges/patreon-planes-para-sponsors-ff424d-ftb-151c63.svg" alt="Patreon - Planes para Sponsors" />
   </a>
   <a href="https://tecito.app/juanjoclassic" target="_blank">
-    <img src="https://img.shields.io/badge/%E2%98%95_Invitame_un_Tecito_/_Donate-tecito.app%2Fjuanjoclassic-FF813F?style=for-the-badge&logoColor=white" alt="Donar un Tecito - tecito.app/juanjoclassic" />
+    <img src="assets/badges/invitame-un-tecito-donate-tecito-app-juanj-ftb-9ce508.svg" alt="Donar un Tecito - tecito.app/juanjoclassic" />
   </a>
   <a href="https://www.linkedin.com/in/juan-m-97b85681/" target="_blank">
-    <img src="https://img.shields.io/badge/LinkedIn-Juan_Monz%C3%B3n-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn - Juan Monzón" />
+    <img src="assets/badges/linkedin-juan-monz-n-0a66c2-ftb-1915bf.svg" alt="LinkedIn - Juan Monzón" />
   </a>
   <a href="https://www.instagram.com/juanjoclassic/" target="_blank">
-    <img src="https://img.shields.io/badge/Instagram-%40juanjoclassic-E4405F?style=for-the-badge&logo=instagram&logoColor=white" alt="Instagram - @juanjoclassic" />
+    <img src="assets/badges/instagram-juanjoclassic-e4405f-ftb-dab03a.svg" alt="Instagram - @juanjoclassic" />
   </a>
 </p>
 
